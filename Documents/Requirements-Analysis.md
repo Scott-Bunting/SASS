@@ -9,6 +9,7 @@ This document contains the requirements analysis, outlining an initial specifica
 * Revise section on IMU. Currently a bit wishy washy and specific reports using accelerometer data would be valuable.
 * Add photos of each sensor and potentially visualisation for PPG and blood flow.
 * Update the README.md file as a result of changes made here.
+* Update the HMI section with more detail, selecting one method of interfacing with the defice for the lab/bench prototype.
 
 ## Physiological Signs
 
@@ -105,6 +106,18 @@ more general information regarding the activity of the wearer, which helps add c
 The higher-fidelity analysis uses the IMU to detect trembling, or SA specific movements, in the wearer.  
 The lower-fidelity analysis uses the IMU to detect general levels of activity, which should indicate how physical exertion the wearer is undergoing. 
 Thereby explaining physiological signs which may be heightened as a result of this activity.
+
+## Human Machine Interface
+The Human Machine Interface is what allows the user to interact with the system and register when they are feeling SA. 
+This is likely to be implemented in a limited form in the lab/bench prototype.
+
+### Push Button
+
+### Microphone
+
+### Gesture/Tap
+
+### Touch Screen/Capacitive Surface
 
 ## Communication Modules
 
