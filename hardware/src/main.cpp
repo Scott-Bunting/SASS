@@ -17,6 +17,7 @@
 #include "gsr.h"
 #include "ppg.h"
 #include "led.h"
+#include "sdcard.h"
 
 // #define DEBUG_MAIN // Uncomment whilst debugging for Serial debug stats.
 
@@ -45,6 +46,7 @@ void setup()
   // dacWrite(25, 0);     // speaker drive low
 
   ledInit();
+  sdInit();
   // ledRunTest(); // for testing only
 
   M5.Lcd.fillScreen(BLACK);
@@ -71,7 +73,7 @@ void setup()
   M5.Lcd.setTextColor(MAGENTA);
   M5.Lcd.setTextSize(2);
   M5.Lcd.setCursor(0, 220);
-  M5.Lcd.print("   Finger  Wrist   Other  ");
+  M5.Lcd.print("   Prototype  Record   Other  ");
 
   MODE = Modes::FULL;
   int button = 0;
