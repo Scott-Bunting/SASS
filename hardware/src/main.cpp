@@ -73,7 +73,7 @@ void setup()
   M5.Lcd.setTextColor(MAGENTA);
   M5.Lcd.setTextSize(2);
   M5.Lcd.setCursor(0, 220);
-  M5.Lcd.print("   Prototype  Record   Other  ");
+  M5.Lcd.print("   Proto   Other   Record  ");
 
   MODE = Modes::FULL;
   int button = 0;
