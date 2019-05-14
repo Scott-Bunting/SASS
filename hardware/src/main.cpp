@@ -47,6 +47,7 @@ void setup()
 
   ledInit();
   sdInit();
+
   // ledRunTest(); // for testing only
 
   M5.Lcd.fillScreen(BLACK);
@@ -109,8 +110,8 @@ void setup()
     M5.update();
   }
 
-  DATA.ppgBSL = button; // set PPG body sensor location
-  DATA.gsrBSL = button; // set GSR body sensor location
+  DATA.ppgBSL = 3; // button; // set PPG body sensor location (Fixed to 3 - fingers - due to broken buttons)
+  DATA.gsrBSL = 3; // button; // set GSR body sensor location (Fixed to 3 - fingers - due to broken buttons)
 
   bleInit(DEVICE_NAME);
 
