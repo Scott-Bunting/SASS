@@ -106,10 +106,14 @@ void setup()
       button = 0; // BSL = Other (see BLE spec)
       Serial.println("BtnC Pressed");
       sdInit();
-      delay(500);
-      while (!M5.BtnC.pressedFor(100))
+      while (true)
       {
-        // wait for BtnC press again
+        if (M5.BtnC.pressedFor(100))
+        {
+          sdRecord();
+          Serial.println("[DEBUG] sdRecord has run");
+          break;
+        }
       }
       break;
     }

@@ -5,6 +5,7 @@
 // #include <time.h>
 #include <Time.h>
 #include <SD.h>
+#include <string>
 
 // Define pins for SD Card
 #define SD_CS 4
@@ -19,14 +20,15 @@ void listDir(const char *dirname, uint8_t levels);
 void sdInit()
 {
   File file = SD.open("/log.txt", FILE_APPEND);
-  if (file) 
+  if (file)
   {
     file.print(1);
     Serial.print("SIZE:  ");
     Serial.println(file.size());
     file.close();
   }
-  else {
+  else
+  {
     Serial.println("Failed to open directory");
   }
 
@@ -36,8 +38,32 @@ void sdInit()
     file.print("testing");
     file.close();
   }
-  else {
+  else
+  {
     Serial.println("Failed to open directory");
+  }
+}
+
+void sdRecord()
+{
+  File file = SD.open("/log.txt");
+  int sessionNumber = file.size(); //don't need to add 1 because sdInit is run before and adds 1
+  file.close();
+
+  int str_length = 15;
+  char sessionName[str_length];
+  sprintf(sessionName, "/session%d", sessionNumber);
+  strcat(sessionName, ".csv");
+  Serial.println(sessionName);
+
+  file = SD.open(sessionName, FILE_WRITE);
+  if (file)
+  {
+    file.print("new file creation test");
+  }
+  else
+  {
+    Serial.println("No file created");
   }
 }
 
