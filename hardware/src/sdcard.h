@@ -48,7 +48,6 @@ void sdInit()
 void listDir(const char *dirname, uint8_t levels)
 {
   Serial.printf("Listing directory: %s\n", dirname);
-  M5.Lcd.printf("Listing directory: %s\n", dirname);
 
   File root = SD.open(dirname);
   if (!root)
