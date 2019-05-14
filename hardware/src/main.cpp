@@ -291,6 +291,12 @@ void loop()
 #endif // DEBUG_GSR
   }
 
+  if (millis() - timeStartRecord > 50)
+  {
+    sdRecord();
+    timeStartGSR = millis(); // resets timer
+  }
+
   drawLcdSensorValues();
   drawLcdBleStatus();
 }
