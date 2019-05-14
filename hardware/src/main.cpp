@@ -46,7 +46,6 @@ void setup()
   // dacWrite(25, 0);     // speaker drive low
 
   ledInit();
-  sdInit();
 
   // ledRunTest(); // for testing only
 
@@ -105,6 +104,13 @@ void setup()
     else if (M5.BtnC.pressedFor(100))
     {
       button = 0; // BSL = Other (see BLE spec)
+      Serial.println("BtnC Pressed");
+      sdInit();
+      delay(500);
+      while (!M5.BtnC.pressedFor(100))
+      {
+        // wait for BtnC press again
+      }
       break;
     }
     M5.update();
@@ -253,7 +259,7 @@ void loop()
   {
     bleLCD(); // debug BLE information to LCD
     bleRun(); // general BLE activity
-    if (deviceConnected && millis() > dataSimulateTimer+800)
+    if (deviceConnected && millis() > dataSimulateTimer + 800)
     {
       simulateDataChanges();
       dataSimulateTimer = millis();

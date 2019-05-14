@@ -16,32 +16,28 @@ uint32_t startTime;
 
 void listDir(const char *dirname, uint8_t levels);
 
-File root;
-// time_t timert;
-
 void sdInit()
 {
-  while (!Serial)
-  {
-    // wait for serial port to connect
-  }
-  listDir("/", 0);
-
-  File file = SD.open("/test.txt", FILE_WRITE);
-
-  startTime = millis();
-
-  Serial.println(startTime);
+  File file = SD.open("/log.txt", FILE_APPEND);
   if (file) 
   {
-    file.print(startTime);
+    file.print(1);
+    Serial.print("SIZE:  ");
+    Serial.println(file.size());
     file.close();
+  }
+  else {
+    Serial.println("Failed to open directory");
   }
 
   file = SD.open("/test.txt", FILE_APPEND);
   if (file)
   {
-    file.print("appended");
+    file.print("testing");
+    file.close();
+  }
+  else {
+    Serial.println("Failed to open directory");
   }
 }
 
