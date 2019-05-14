@@ -35,6 +35,7 @@ void M5off()
 
 void setup()
 {
+  int count = 0;
   DATA.FIRMWARE_REVISION = "0.4.0";
   String DEVICE_NAME = "SASS M5 S";
 
@@ -106,15 +107,15 @@ void setup()
       button = 0; // BSL = Other (see BLE spec)
       Serial.println("BtnC Pressed");
       sdInit();
-      while (true)
-      {
-        if (M5.BtnC.pressedFor(100))
-        {
-          sdRecord();
-          Serial.println("[DEBUG] sdRecord has run");
-          break;
-        }
-      }
+      // while (true)
+      // {
+      //   if (M5.BtnC.pressedFor(100))
+      //   {
+      //     // sdRecord();
+      //     Serial.println("[DEBUG] sdRecord has run");
+      //     break;
+      //   }
+      // }
       break;
     }
     M5.update();
@@ -158,6 +159,7 @@ void setup()
     M5.Lcd.print("GSR Graph");
 
     timeStartGSR = millis();
+    timeStartRecord = millis();
     gsrRun();
   }
 

@@ -7,6 +7,8 @@
 #include <SD.h>
 #include <string>
 
+#define DEBUG_SD // Uncomment for SD Card debugging
+
 // Define pins for SD Card
 #define SD_CS 4
 #define SD_MOSI 23
@@ -14,11 +16,16 @@
 #define SD_CLK 18
 
 uint32_t startTime;
+bool firstLine;
+int count;
+int timeStartRecord;
 
 void listDir(const char *dirname, uint8_t levels);
 
 void sdInit()
 {
+  count = 0;
+  firstLine = true;
   File file = SD.open("/log.txt", FILE_APPEND);
   if (file)
   {
@@ -56,15 +63,56 @@ void sdRecord()
   strcat(sessionName, ".csv");
   Serial.println(sessionName);
 
-  file = SD.open(sessionName, FILE_WRITE);
+  file = SD.open(sessionName, FILE_APPEND);
   if (file)
   {
-    file.print("new file creation test");
+    Serial.println(count);
+    if (firstLine)
+    {
+      file.print("count, GSR, HR, IBI, SpO2, \n");
+      firstLine = false;
+    }
+    else
+    {
+      char lineEntry[100];
+      char countChar[10];
+      itoa(count, countChar, 10);
+      strcat(countChar, "\0");
+      char gsrChar[5];
+      itoa(DATA.scl, gsrChar, 10);
+      char HRChar[4];
+      itoa(DATA.heartRate, HRChar, 10);
+      char IBIChar[5];
+      itoa(DATA.interbeatInterval, IBIChar, 10);
+      char SpO2Char[10];
+      itoa(DATA.spo2, SpO2Char, 10);
+
+      strcat(lineEntry, countChar);
+      strcat(lineEntry, ",");
+      strcat(lineEntry, gsrChar);
+      strcat(lineEntry, ",");
+      strcat(lineEntry, HRChar);
+      strcat(lineEntry, ",");
+      strcat(lineEntry, IBIChar);
+      strcat(lineEntry, ",");
+      strcat(lineEntry, SpO2Char);
+      strcat(lineEntry, ",");
+      strcat(lineEntry, " \n");
+
+      file.print(lineEntry);
+      file.close();
+
+      #ifdef DEBUG_SD
+      Serial.println(lineEntry);
+
+      #endif // DEBUG
+    }
   }
   else
   {
     Serial.println("No file created");
   }
+  ++count;
 }
 
 void listDir(const char *dirname, uint8_t levels)
