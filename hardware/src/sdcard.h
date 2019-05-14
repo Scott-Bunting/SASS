@@ -46,13 +46,11 @@ void listDir(const char *dirname, uint8_t levels)
   if (!root)
   {
     Serial.println("Failed to open directory");
-    M5.Lcd.println("Failed to open directory");
     return;
   }
   if (!root.isDirectory())
   {
     Serial.println("Not a directory");
-    M5.Lcd.println("Not a directory");
     return;
   }
 
@@ -62,9 +60,7 @@ void listDir(const char *dirname, uint8_t levels)
     if (file.isDirectory())
     {
       Serial.print("  DIR : ");
-      M5.Lcd.print("  DIR : ");
       Serial.println(file.name());
-      M5.Lcd.println(file.name());
       if (levels)
       {
         listDir(file.name(), levels - 1);
@@ -73,13 +69,9 @@ void listDir(const char *dirname, uint8_t levels)
     else
     {
       Serial.print("  FILE: ");
-      M5.Lcd.print("  FILE: ");
       Serial.print(file.name());
-      M5.Lcd.print(file.name());
       Serial.print("  SIZE: ");
-      M5.Lcd.print("  SIZE: ");
       Serial.println(file.size());
-      M5.Lcd.println(file.size());
     }
     file = root.openNextFile();
   }
