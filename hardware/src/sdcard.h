@@ -4,6 +4,7 @@
 #include <M5Stack.h>
 // #include <time.h>
 #include <Time.h>
+#include <SD.h>
 
 // Define pins for SD Card
 #define SD_CS 4
@@ -34,6 +35,13 @@ void sdInit()
   if (file) 
   {
     file.print(startTime);
+    file.close();
+  }
+
+  file = SD.open("/test.txt", FILE_APPEND);
+  if (file)
+  {
+    file.print("appended");
   }
 }
 
