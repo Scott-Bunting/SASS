@@ -35,7 +35,7 @@ void M5off()
 
 void setup()
 {
-  int count = 0;
+  count = (uint32_t)0;
   DATA.FIRMWARE_REVISION = "0.4.0";
   String DEVICE_NAME = "SASS M5 S";
 
@@ -291,7 +291,7 @@ void loop()
 #endif // DEBUG_GSR
   }
 
-  if (millis() - timeStartRecord > 50)
+  if (millis() - timeStartRecord > 100)
   {
     sdRecord();
     timeStartGSR = millis(); // resets timer

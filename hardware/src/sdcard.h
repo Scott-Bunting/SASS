@@ -15,23 +15,24 @@
 #define SD_MISO 19
 #define SD_CLK 18
 
-uint32_t startTime;
 bool firstLine;
-int count;
+uint16_t count;
 int timeStartRecord;
-
-void listDir(const char *dirname, uint8_t levels);
+int sessionNumber;
+char sessionName[15];
 
 void sdInit()
 {
   count = 0;
   firstLine = true;
   File file = SD.open("/log.txt", FILE_APPEND);
+
   if (file)
   {
     file.print(1);
-    Serial.print("SIZE:  ");
-    Serial.println(file.size());
+    sessionNumber = file.size();
+    sprintf(sessionName, "/session%d", sessionNumber + 1);
+    strcat(sessionName, ".csv");
     file.close();
   }
   else
@@ -49,35 +50,33 @@ void sdInit()
   {
     Serial.println("Failed to open directory");
   }
+
+#ifdef DEBUG_SD
+  Serial.print("SIZE:  ");
+  Serial.println(sessionNumber);
+  Serial.println(sessionName);
+#endif // DEBUG
 }
 
 void sdRecord()
 {
-  File file = SD.open("/log.txt");
-  int sessionNumber = file.size(); //don't need to add 1 because sdInit is run before and adds 1
-  file.close();
-
-  int str_length = 15;
-  char sessionName[str_length];
-  sprintf(sessionName, "/session%d", sessionNumber);
-  strcat(sessionName, ".csv");
-  Serial.println(sessionName);
-
-  file = SD.open(sessionName, FILE_APPEND);
+  File file = SD.open(sessionName, FILE_APPEND);
   if (file)
   {
-    Serial.println(count);
     if (firstLine)
     {
       file.print("count, GSR, HR, IBI, SpO2, \n");
       firstLine = false;
     }
+
     else
     {
-      char lineEntry[100];
-      char countChar[10];
+      // initialising the empty Line Entry
+      char lineEntry[100] = "\0";
+
+      // Convert data into characters to create Line Entry for CSV
+      char countChar[5];
       itoa(count, countChar, 10);
-      strcat(countChar, "\0");
       char gsrChar[5];
       itoa(DATA.scl, gsrChar, 10);
       char HRChar[4];
@@ -87,6 +86,7 @@ void sdRecord()
       char SpO2Char[10];
       itoa(DATA.spo2, SpO2Char, 10);
 
+      // Creating Line Entry for CSV file
       strcat(lineEntry, countChar);
       strcat(lineEntry, ",");
       strcat(lineEntry, gsrChar);
@@ -96,16 +96,16 @@ void sdRecord()
       strcat(lineEntry, IBIChar);
       strcat(lineEntry, ",");
       strcat(lineEntry, SpO2Char);
-      strcat(lineEntry, ",");
       strcat(lineEntry, " \n");
 
+      // add Line Entry to file and close
       file.print(lineEntry);
       file.close();
 
-      #ifdef DEBUG_SD
+#ifdef DEBUG_SD
       Serial.println(lineEntry);
+#endif // DEBUG
 
-      #endif // DEBUG
     }
   }
   else
@@ -113,45 +113,6 @@ void sdRecord()
     Serial.println("No file created");
   }
   ++count;
-}
-
-void listDir(const char *dirname, uint8_t levels)
-{
-  Serial.printf("Listing directory: %s\n", dirname);
-
-  File root = SD.open(dirname);
-  if (!root)
-  {
-    Serial.println("Failed to open directory");
-    return;
-  }
-  if (!root.isDirectory())
-  {
-    Serial.println("Not a directory");
-    return;
-  }
-
-  File file = root.openNextFile();
-  while (file)
-  {
-    if (file.isDirectory())
-    {
-      Serial.print("  DIR : ");
-      Serial.println(file.name());
-      if (levels)
-      {
-        listDir(file.name(), levels - 1);
-      }
-    }
-    else
-    {
-      Serial.print("  FILE: ");
-      Serial.print(file.name());
-      Serial.print("  SIZE: ");
-      Serial.println(file.size());
-    }
-    file = root.openNextFile();
-  }
 }
 
 #endif // sdcard_h
