@@ -34,7 +34,8 @@ void sdInit()
   if (file)
   {
     sdCardAvailable = true;
-
+    Serial.println("SD Card Mounted");
+    
     file.print(1);
     sessionNumber = file.size();
     sprintf(sessionName, "/session%d", sessionNumber + 1);
