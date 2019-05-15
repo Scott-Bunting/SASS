@@ -40,17 +40,6 @@ void sdInit()
     Serial.println("Failed to open directory");
   }
 
-  file = SD.open("/test.txt", FILE_APPEND);
-  if (file)
-  {
-    file.print("testing");
-    file.close();
-  }
-  else
-  {
-    Serial.println("Failed to open directory");
-  }
-
 #ifdef DEBUG_SD
   Serial.print("SIZE:  ");
   Serial.println(sessionNumber);
