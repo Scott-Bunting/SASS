@@ -108,7 +108,7 @@ void setup()
       Serial.println("BtnC Pressed");
       sdInit();
 
-      #ifdef DEBUG_SD
+#ifdef DEBUG_SD
       if (sdCardAvailable)
       {
         Serial.println("SD Card Successfully Mounted");
@@ -117,8 +117,8 @@ void setup()
       {
         Serial.println("SD Card not available");
       }
-      #endif // DEBUG_SD
-      
+#endif // DEBUG_SD
+
       break;
     }
     M5.update();
@@ -296,8 +296,11 @@ void loop()
 
   if (millis() - timeStartRecord > 50)
   {
-    sdRecord();
-    timeStartGSR = millis(); // resets timer
+    if (sdCardAvailable)
+    {
+      sdRecord();
+    }
+    timeStartRecord = millis(); // resets timer
   }
 
   drawLcdSensorValues();
