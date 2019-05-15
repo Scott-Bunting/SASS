@@ -107,6 +107,18 @@ void setup()
       button = 0; // BSL = Other (see BLE spec)
       Serial.println("BtnC Pressed");
       sdInit();
+
+      #ifdef DEBUG_SD
+      if (sdCardAvailable)
+      {
+        Serial.println("SD Card Successfully Mounted");
+      }
+      else
+      {
+        Serial.println("SD Card not available");
+      }
+      #endif // DEBUG_SD
+      
       break;
     }
     M5.update();

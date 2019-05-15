@@ -16,6 +16,7 @@
 #define SD_CLK 18
 
 bool firstLine;
+bool sdCardAvailable;
 uint16_t count;
 int timeStartRecord;
 int sessionNumber;
@@ -25,10 +26,13 @@ void sdInit()
 {
   count = 0;
   firstLine = true;
+
   File file = SD.open("/log.txt", FILE_APPEND);
 
   if (file)
   {
+    sdCardAvailable = true;
+
     file.print(1);
     sessionNumber = file.size();
     sprintf(sessionName, "/session%d", sessionNumber + 1);
@@ -38,6 +42,7 @@ void sdInit()
   else
   {
     Serial.println("Failed to open directory");
+    sdCardAvailable = false;
   }
 
 #ifdef DEBUG_SD
@@ -93,13 +98,16 @@ void sdRecord()
 
 #ifdef DEBUG_SD
       Serial.println(lineEntry);
-#endif // DEBUG
-
+#endif // DEBUG_SD
     }
   }
   else
   {
-    Serial.println("No file created");
+    sdCardAvailable = false;
+
+#ifdef DEBUG_SD
+    Serial.println("SD Card Unavailable");
+#endif // DEBUG_SD
   }
   ++count;
 }
