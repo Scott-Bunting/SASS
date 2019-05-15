@@ -7,7 +7,7 @@
 #include <SD.h>
 #include <string>
 
-#define DEBUG_SD // Uncomment for SD Card debugging
+// #define DEBUG_SD // Uncomment for SD Card debugging
 
 // Define pins for SD Card
 #define SD_CS 4
@@ -17,6 +17,8 @@
 
 bool firstLine;
 bool sdCardAvailable;
+bool stop;
+bool paused;
 uint16_t count;
 int timeStartRecord;
 int sessionNumber;

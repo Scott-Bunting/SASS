@@ -308,6 +308,32 @@ void loop()
     timeStartRecord = millis(); // resets timer
   }
 
+  if (M5.BtnC.read())
+  {
+    M5.Lcd.setTextColor(MAGENTA);
+    M5.Lcd.setTextSize(2);
+    M5.Lcd.setCursor(0, 220);
+    M5.Lcd.print("          New    Wipe  ");
+    delay(500);
+    while (!M5.BtnC.read() || !M5.BtnB.read())
+    {
+      if (M5.BtnC.read())
+      {
+        SD.remove("/log.txt");
+        ESP.restart();
+      }
+      else if (M5.BtnB.read())
+      {
+        ESP.restart();
+      }
+    }
+  }
+
+  if (M5.BtnB.read())
+  {
+    paused = true;
+  }
+
   drawLcdSensorValues();
   drawLcdBleStatus();
 }
