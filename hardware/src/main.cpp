@@ -299,6 +299,11 @@ void loop()
     if (sdCardAvailable)
     {
       sdRecord();
+
+      M5.Lcd.setTextColor(MAGENTA);
+      M5.Lcd.setTextSize(2);
+      M5.Lcd.setCursor(0, 220);
+      M5.Lcd.print("          Pause    Stop  ");
     }
     timeStartRecord = millis(); // resets timer
   }
