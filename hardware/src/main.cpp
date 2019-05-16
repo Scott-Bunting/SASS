@@ -320,6 +320,16 @@ void loop()
     {
       if (M5.BtnC.read())
       {
+        File file = SD.open("/log.txt");
+        int logSize = file.size();
+        file.close();
+        for (int i = 0; i < logSize; i++)
+        {
+          char fileName[15] = "\0";
+          sprintf(fileName, "/session%d", i);
+          strcat(fileName, ".csv");
+          SD.remove(fileName);
+        }
         SD.remove("/log.txt");
         ESP.restart();
       }
