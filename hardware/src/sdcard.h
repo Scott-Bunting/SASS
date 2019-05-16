@@ -35,7 +35,7 @@ void sdInit()
   {
     sdCardAvailable = true;
     Serial.println("SD Card Mounted");
-    
+
     file.print(1);
     sessionNumber = file.size();
     sprintf(sessionName, "/session%d", sessionNumber + 1);
@@ -113,6 +113,21 @@ void sdRecord()
 #endif // DEBUG_SD
   }
   ++count;
+}
+
+void sdWipe()
+{
+  File file = SD.open("/log.txt");
+  int logSize = file.size();
+  file.close();
+  for (int i = 0; i < logSize; i++)
+  {
+    char fileName[15] = "\0";
+    sprintf(fileName, "/session%d", i);
+    strcat(fileName, ".csv");
+    SD.remove(fileName);
+  }
+  SD.remove("/log.txt");
 }
 
 #endif // sdcard_h
