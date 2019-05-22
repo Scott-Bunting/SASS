@@ -18,6 +18,7 @@ bool sdCardAvailable;
 bool stop;
 bool paused;
 uint16_t count;
+uint32_t timeRecord;
 int timeStartRecord;
 int sessionNumber;
 char sessionName[15];
@@ -57,13 +58,14 @@ void sdInit()
 void sdRecord()
 {
   File file = SD.open(sessionName, FILE_APPEND);
+  timeRecord = millis() - timeStart;
   if (file)
   {
     if (firstLine)
     {
       file.print(timeStamp);
       file.print("\n");
-      file.print("count, GSR, HR, IBI, SpO2, \n");
+      file.print("count, time, GSR, HR, IBI, SpO2, \n");
       firstLine = false;
     }
 
@@ -75,6 +77,8 @@ void sdRecord()
       // Convert data into characters to create Line Entry for CSV
       char countChar[5];
       itoa(count, countChar, 10);
+      char timeChar[10];
+      itoa(timeRecord, timeChar, 10);
       char gsrChar[5];
       itoa(DATA.scl, gsrChar, 10);
       char HRChar[4];
@@ -86,6 +90,8 @@ void sdRecord()
 
       // Creating Line Entry for CSV file
       strcat(lineEntry, countChar);
+      strcat(lineEntry, ",");
+      strcat(lineEntry, timeChar);
       strcat(lineEntry, ",");
       strcat(lineEntry, gsrChar);
       strcat(lineEntry, ",");

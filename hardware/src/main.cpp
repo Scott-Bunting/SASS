@@ -23,7 +23,7 @@
 #include "led.h"
 #include "sdcard.h"
 
-// #define DEBUG_MAIN // Uncomment whilst debugging for Serial debug stats.
+#define DEBUG_MAIN // Uncomment whilst debugging for Serial debug stats.
 
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP);
@@ -48,6 +48,8 @@ void setup()
   count = (uint32_t)0;
   DATA.FIRMWARE_REVISION = "0.4.0";
   String DEVICE_NAME = "SASS M5 S";
+
+  uint32_t timeStart = millis();
 
   const char *ssid = "ScottSpot";
   const char *password = "password123";
@@ -83,24 +85,44 @@ void setup()
   while (WiFi.status() != WL_CONNECTED)
   {
     delay(500);
+
+#ifdef DEBUG_MAIN
+    Serial.println("[DEBUG_MAIN] Wifi Connection Loop");
+#endif // DEBUG_MAIN
   }
 
   if (WiFi.status() == WL_CONNECTED)
   {
-    M5.Lcd.drawRect(22, 220, 100, 2, BLACK);
-    M5.Lcd.setTextColor(YELLOW);
+    M5.Lcd.fillRect(22, 120, 300, 20, BLACK);
+    M5.Lcd.setTextColor(GREEN);
     M5.Lcd.setTextSize(2);
-    M5.Lcd.setCursor(22, 120);
-    M5.Lcd.print("Wifi Connecting...");
+    M5.Lcd.setCursor(40, 120);
+    M5.Lcd.print("Wifi Connected");
+    delay(500);
     timeClient.begin();
     while (!timeClient.update())
     {
       timeClient.forceUpdate();
+
+      if (millis() - timeStart > 60000)
+      {
+        break;
+      }
+
+#ifdef DEBUG_MAIN
+      Serial.print("[DEBUG_MAIN] timeclient loop: ");
+      Serial.println(millis() - timeStart);
+#endif //DEBUG_MAIN
+
     }
     formattedDate = timeClient.getFormattedTime();
     int splitT = formattedDate.indexOf("T");
     timeStamp = formattedDate.substring(splitT + 1, formattedDate.length() - 1);
+
+    #ifdef DEBUG_MAIN
+    Serial.print("[DEBUG_MAIN] initial timestamp: ");
     Serial.println(timeStamp);
+    #endif // DEBUG_MAIN
   }
   else if (WiFi.status() == WL_CONNECT_FAILED)
   {
