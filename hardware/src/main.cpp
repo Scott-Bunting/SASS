@@ -113,16 +113,21 @@ void setup()
       Serial.print("[DEBUG_MAIN] timeclient loop: ");
       Serial.println(millis() - timeStart);
 #endif //DEBUG_MAIN
-
     }
+
     formattedDate = timeClient.getFormattedTime();
     int splitT = formattedDate.indexOf("T");
     timeStamp = formattedDate.substring(splitT + 1, formattedDate.length() - 1);
 
-    #ifdef DEBUG_MAIN
+    M5.Lcd.setTextColor(WHITE);
+    M5.Lcd.setTextSize(2);
+    M5.Lcd.setCursor(100, 140);
+    M5.Lcd.print(timeStamp);
+
+#ifdef DEBUG_MAIN
     Serial.print("[DEBUG_MAIN] initial timestamp: ");
     Serial.println(timeStamp);
-    #endif // DEBUG_MAIN
+#endif // DEBUG_MAIN
   }
   else if (WiFi.status() == WL_CONNECT_FAILED)
   {
@@ -156,7 +161,7 @@ void setup()
   long loopStartTimer = millis();
   while (true)
   {
-    if (millis() > loopStartTimer + 60000)
+    if (millis() > loopStartTimer + 300000)
       M5off();
 
     if (millis() > loopStartTimer + 10000)
