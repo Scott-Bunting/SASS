@@ -2,8 +2,6 @@
 #define sdcard_h
 
 #include <M5Stack.h>
-// #include <time.h>
-#include <Time.h>
 #include <SD.h>
 #include <string>
 
@@ -23,6 +21,7 @@ uint16_t count;
 int timeStartRecord;
 int sessionNumber;
 char sessionName[15];
+String timeStamp;
 
 void sdInit()
 {
@@ -62,6 +61,8 @@ void sdRecord()
   {
     if (firstLine)
     {
+      file.print(timeStamp);
+      file.print("\n");
       file.print("count, GSR, HR, IBI, SpO2, \n");
       firstLine = false;
     }

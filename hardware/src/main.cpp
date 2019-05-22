@@ -12,6 +12,10 @@
   also displayed on device LCD for convenience.
 */
 #include <M5Stack.h>
+#include <WiFi.h>
+#include <NTPclient.h>
+#include <WiFiUdp.h>
+
 #include "data.h"
 #include "ble.h"
 #include "gsr.h"
@@ -20,6 +24,12 @@
 #include "sdcard.h"
 
 // #define DEBUG_MAIN // Uncomment whilst debugging for Serial debug stats.
+
+WiFiUDP ntpUDP;
+NTPClient timeClient(ntpUDP);
+
+String formattedDate;
+String dayStamp;
 
 enum class Modes
 {
@@ -38,6 +48,9 @@ void setup()
   count = (uint32_t)0;
   DATA.FIRMWARE_REVISION = "0.4.0";
   String DEVICE_NAME = "SASS M5 S";
+
+  const char *ssid = "ScottSpot";
+  const char *password = "password123";
 
   Serial.begin(115200);
   M5.begin();
@@ -61,10 +74,50 @@ void setup()
   M5.Lcd.setCursor(64, 90);
   M5.Lcd.print(DEVICE_NAME + " v" + DATA.FIRMWARE_REVISION);
 
-  M5.Lcd.setTextColor(GREEN);
+  M5.Lcd.setTextColor(YELLOW);
   M5.Lcd.setTextSize(2);
   M5.Lcd.setCursor(22, 120);
-  //M5.Lcd.print("github.com/nebbles/MHML");
+  M5.Lcd.print("Wifi Connecting...");
+  WiFi.begin(ssid, password);
+
+  while (WiFi.status() != WL_CONNECTED)
+  {
+    delay(500);
+  }
+
+  if (WiFi.status() == WL_CONNECTED)
+  {
+    M5.Lcd.drawRect(22, 220, 100, 2, BLACK);
+    M5.Lcd.setTextColor(YELLOW);
+    M5.Lcd.setTextSize(2);
+    M5.Lcd.setCursor(22, 120);
+    M5.Lcd.print("Wifi Connecting...");
+    timeClient.begin();
+    while (!timeClient.update())
+    {
+      timeClient.forceUpdate();
+    }
+    formattedDate = timeClient.getFormattedTime();
+    int splitT = formattedDate.indexOf("T");
+    timeStamp = formattedDate.substring(splitT + 1, formattedDate.length() - 1);
+    Serial.println(timeStamp);
+  }
+  else if (WiFi.status() == WL_CONNECT_FAILED)
+  {
+    M5.Lcd.drawRect(22, 220, 100, 2, BLACK);
+    M5.Lcd.setTextColor(RED);
+    M5.Lcd.setTextSize(2);
+    M5.Lcd.setCursor(22, 120);
+    M5.Lcd.print("Wifi Connection Failed");
+  }
+  else
+  {
+    M5.Lcd.drawRect(22, 220, 100, 2, BLACK);
+    M5.Lcd.setTextColor(RED);
+    M5.Lcd.setTextSize(2);
+    M5.Lcd.setCursor(22, 120);
+    M5.Lcd.print(WiFi.status());
+  }
 
   M5.Lcd.setTextColor(YELLOW);
   M5.Lcd.setTextSize(2);
